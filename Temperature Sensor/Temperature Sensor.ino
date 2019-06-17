@@ -52,11 +52,6 @@ void callback(char* topic, byte* payload, unsigned int length){
     
   Serial.println();
   Serial.println("====================================");
-
- /* if(payload[0] == '1')
-    digitalWrite(D8, HIGH);
-  if(payload[0] == '0')
-    digitalWrite(D8, LOW);*/
 }
 
 void loop() {
