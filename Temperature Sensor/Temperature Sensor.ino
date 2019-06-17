@@ -36,8 +36,7 @@ void setup() {
       delay(2000);
     }
   }
-  
-  client.publish("esp/test", "Hello World");
+
   client.subscribe("esp/test");
 }
 
