@@ -13,7 +13,6 @@ PubSubClient client(espClient);
 
 void setup() {
   Serial.begin(9600);
-  //pinMode(D8, OUTPUT);
   WiFi.begin(ssid, password);
 
   while (WiFi.status() != WL_CONNECTED){
