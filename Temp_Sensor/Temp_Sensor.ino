@@ -13,6 +13,9 @@ float prevTemp = 0;
 WiFiClient espClient;
 PubSubClient client(espClient);
 
+
+
+
 void setup() {
   Serial.begin(9600);
   WiFi.begin(ssid, password);
@@ -61,6 +64,8 @@ void loop() {
   delay(10000);
 }
 
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////
 float roundFloat(float value){
   int tmp = value * 100;
   
@@ -76,8 +81,6 @@ void readTemp(){
 
   char msg[8];
   dtostrf(temp, 6, 1, msg);
-
-  //temp = roundFloat(temp);
 
   Serial.print("TEMPERATURE:");
   Serial.println(temp);
