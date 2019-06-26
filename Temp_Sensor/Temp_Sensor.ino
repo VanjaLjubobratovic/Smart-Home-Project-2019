@@ -1,5 +1,6 @@
 #include <ESP8266WiFi.h>
 #include <PubSubClient.h>
+#include <math.h>
 
 const char* ssid = "Ljubo";
 const char* password = "H4kXnyZ4";
@@ -7,7 +8,7 @@ const char* mqttServer = "m24.cloudmqtt.com";
 const int mqttPort = 10396; 
 const char* mqttPassword = "AAdW5aQnAHgD";
 const char* mqttUser = "rzgylfzg";
-int prevTemp = 0;
+float prevTemp = 0;
 
 WiFiClient espClient;
 PubSubClient client(espClient);
@@ -55,28 +56,40 @@ void callback(char* topic, byte* payload, unsigned int length){
 
 void loop() {
   client.loop();
+  readTemp();
   
+  delay(10000);
+}
+
+float roundFloat(float value){
+  int tmp = value * 100;
+  
+  tmp -= tmp % 10;
+  value = tmp;
+  return value / 100;
+}
+
+void readTemp(){
   float raw = analogRead(0);
   float mV = (raw / 1024) * 3300;
   float temp = mV / 10; 
 
-  
-  
   char msg[8];
-  dtostrf(temp, 6, 2, msg);
+  dtostrf(temp, 6, 1, msg);
+
+  //temp = roundFloat(temp);
+
+  Serial.print("TEMPERATURE:");
+  Serial.println(temp);
 
   client.publish("esp/tmp", msg);
 
   if(temp > prevTemp)
-  client.publish("esp/tmpChange", "1");
+    client.publish("esp/tmpChange", "1");
 
   if(temp <= prevTemp)
-  client.publish("esp/tmpChange", "0");
-
+    client.publish("esp/tmpChange", "0");
+    
   prevTemp = temp;
-
-
-  
-  delay(10000);
 }
 
