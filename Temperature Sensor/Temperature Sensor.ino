@@ -7,6 +7,7 @@ const char* mqttServer = "m24.cloudmqtt.com";
 const int mqttPort = 10396; 
 const char* mqttPassword = "AAdW5aQnAHgD";
 const char* mqttUser = "rzgylfzg";
+int prevTemp = 0;
 
 WiFiClient espClient;
 PubSubClient client(espClient);
@@ -57,12 +58,25 @@ void loop() {
   
   float raw = analogRead(0);
   float mV = (raw / 1024) * 3300;
-  float temp = mV / 10;
+  float temp = mV / 10;		
+  
+  char msg[8];
+  dtostrf(temp, 6, 2, msg);
 
-  char temperature[8];
-  dtostrf(temp, 6, 2, temperature);
+  client.publish("esp/test", msg);
 
-  client.publish("esp/test", temperature);
+  if(temp > prevTemp)
+	client.publish("esp/tmpChange", "1");
+
+  if(temp < prevTemp)
+	client.publish("esp/tmpChange", "-1");
+
+  if(temp == prevTemp)
+	client.publish("esp/tmpChange", "0");
+
+  prevTemp = temp;
+
+
   
   delay(10000);
 }
